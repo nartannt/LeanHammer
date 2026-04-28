@@ -1,7 +1,7 @@
-name = "Hammer"
+name = "MyHammer"
 precompileModules = true
 preferReleaseBuild = true
-defaultTargets = ["Hammer"]
+defaultTargets = ["MyHammer"]
 
 [[require]]
 name = "«premise-selection»"
@@ -24,4 +24,4 @@ git = "https://github.com/leanprover-community/duper.git"
 rev = "v4.29.0"
 
 [[lean_lib]]
-name = "Hammer"
+name = "MyHammer"

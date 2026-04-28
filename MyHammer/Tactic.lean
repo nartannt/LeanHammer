@@ -1,4 +1,4 @@
-import Hammer.HammerCore
+import MyHammer.HammerCore
 import PremiseSelection
 import Aesop
 import Qq
@@ -7,9 +7,9 @@ open Lean Meta Elab Tactic HammerCore Syntax LibrarySuggestions Duper Aesop Qq
 
 initialize Lean.registerTraceClass `hammer.premises
 
-namespace Hammer
+namespace MyHammer
 
-syntax (name := hammer) "hammer" (ppSpace "[" (term),* "]")? (ppSpace "{"Hammer.configOption,*,?"}")? : tactic
+syntax (name := hammer) "hammer" (ppSpace "[" (term),* "]")? (ppSpace "{"MyHammer.configOption,*,?"}")? : tactic
 
 set_library_suggestions open Lean.LibrarySuggestions in Cloud.premiseSelector <|> sineQuaNonSelector.intersperse currentFile
 
@@ -93,4 +93,4 @@ def evalHammer : Tactic
 | `(tactic| hammer [$userInputTerms,*] {$configOptions,*}) => do evalHammerWithArgs $ ← `(tactic| hammer [$userInputTerms,*] {$configOptions,*})
 | _ => throwUnsupportedSyntax
 
-end Hammer
+end MyHammer
