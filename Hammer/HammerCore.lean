@@ -11,7 +11,7 @@ namespace HammerCore
 def removeHammerStar (facts : Syntax.TSepArray [`HammerCore.hammerStar, `term] ",") : Bool × Syntax.TSepArray `term "," := Id.run do
   let factsArr := facts.elemsAndSeps -- factsArr contains both the elements of facts and separators, ordered like `#[e1, s1, e2, s2, e3]`
   let mut newFactsArr : Array Syntax := #[]
-  let mut removedHammerStar := false
+  let mut removedHammerStar := true
   let mut needToRemoveSeparator := false -- If `*` is removed, its comma also needs to be removed to preserve the elemsAndSeps ordering
   for fact in factsArr do
     match fact with
