@@ -204,21 +204,28 @@ macro_rules | `(tactic| hammerCore [$simpLemmas,*] [$facts,*]) => `(tactic| hamm
 
 /-- Checks to ensure that the set of given `configOptions` is usable. -/
 def validateConfigOptions (configOptions : ConfigurationOptions) : TacticM ConfigurationOptions := do
-  if configOptions.disableAesop && configOptions.disableAuto then
-    throwError "Erroneous invocation of hammer: The aesop and auto options cannot both be disabled"
   if configOptions.disableAesop && configOptions.preprocessing == Preprocessing.aesop then
     throwError "Erroneous invocation of hammer: Preprocessing cannot be set to aesop when aesop is disabled"
   if !configOptions.disableAesop && configOptions.preprocessing != Preprocessing.aesop then
     throwError "Erroneous invocation of hammer: Preprocessing must be set to aesop when aesop is enabled"
-  if !configOptions.disableAuto && configOptions.solver == Solver.zipperposition_exe then
-    try
-      let _ ← Auto.Solver.TPTP.getZipperpositionExePath -- This throws an error if the executable can't be found
-    catch _ =>
-      if configOptions.disableAesop then
-        throwError "The bundled zipperposition executable could not be found. To retrieve it, run `lake update MyHammer`."
-      else
-        logWarning "The bundled zipperposition executable could not be found. To retrieve it, run `lake update MyHammer`. Continuing with auto disabled..."
+  if !configOptions.disableAuto then
+    let useDefault := auto.tptp.zipperposition.useDefault.get (← getOptions)
+    let defaultPath ← Auto.Solver.TPTP.zipperpositionDefaultPath
+    let err := (
+        s!"Cannot find automatically downloaded Zipperposition executable. " ++
+        s!"Try running \"lake build\" at the root directory of this project " ++
+        s!"to see if \"zipperposition.exe\" pops up in {defaultPath}. Alternatively, " ++
+        s!"you can link LeanHammer to your own installation of Zipperposition by setting " ++
+        s!"\"auto.tptp.zipperposition.useDefault\" to false and setting " ++
+        s!"\"auto.tptp.zipperposition.customPath\" to your own Zipperposition executable."
+      )
+    if useDefault && !(← defaultPath.pathExists) then
+      -- Log a warning and then continue with auto disabled if possible. Otherwise, just throw an error.
+      if !configOptions.disableAesop then
+        logWarning $ err ++ " Continuing with auto disabled..."
         return {configOptions with disableAuto := true}
+      else
+        throwError err
   return configOptions
 
 def parseConfigOptions (configOptionsStx : TSyntaxArray `MyHammer.configOption) : TacticM ConfigurationOptions := do
