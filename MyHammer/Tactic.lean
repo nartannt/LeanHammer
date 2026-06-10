@@ -9,7 +9,7 @@ initialize Lean.registerTraceClass `hammer.premises
 
 namespace MyHammer
 
-syntax (name := hammer) "hammer" (ppSpace "[" (term),* "]")? (ppSpace "{"MyHammer.configOption,*,?"}")? : tactic
+syntax (name := myhammer) "myhammer" (ppSpace "[" (term),* "]")? (ppSpace "{"MyHammer.configOption,*,?"}")? : tactic
 
 set_library_suggestions open Lean.LibrarySuggestions in Cloud.premiseSelector <|> sineQuaNonSelector.intersperse currentFile
 
@@ -59,7 +59,7 @@ def inductive_definitions : CoreM (List Expr) := do
     return SMap.fold cnstToIndDefs [] constants
 
 def evalHammerWithArgs : Tactic
-| `(tactic| hammer%$stxRef [$userInputTerms,*] {$configOptions,*}) => withoutModifyingEnv do
+| `(tactic| myhammer%$stxRef [$userInputTerms,*] {$configOptions,*}) => withoutModifyingEnv do
   withMainContext do
   withOptions (fun o => o.set `linter.deprecated false) do
   let goal ← getMainGoal
@@ -71,7 +71,7 @@ def evalHammerWithArgs : Tactic
     else max configOptions.autoPremises configOptions.aesopPremises
   let librarySuggestionsConfig : LibrarySuggestions.Config := {
     maxSuggestions := maxSuggestions + userInputTerms.size, -- Add `userInputTerms.size` to ensure there are `maxSuggestions` non-duplicate premises
-    caller := "hammer"
+    caller := "myhammer"
   }
   /- Get the registered premise selector for premise selection.
 
@@ -100,12 +100,12 @@ def evalHammerWithArgs : Tactic
 
 -- Note, we no longer use `macro_rules` to process the cases where `hammer` is not given all of its arguments because `macro_rules` appears to
 -- interfere with the tactic suggestions that `hammer` produces.
-@[tactic hammer]
+@[tactic myhammer]
 def evalHammer : Tactic
-| `(tactic| hammer) => do evalHammerWithArgs $ ← `(tactic| hammer [] {})
-| `(tactic| hammer [$userInputTerms,*]) => do evalHammerWithArgs $ ← `(tactic| hammer [$userInputTerms,*] {})
-| `(tactic| hammer {$configOptions,*}) => do evalHammerWithArgs $ ← `(tactic| hammer [] {$configOptions,*})
-| `(tactic| hammer [$userInputTerms,*] {$configOptions,*}) => do evalHammerWithArgs $ ← `(tactic| hammer [$userInputTerms,*] {$configOptions,*})
+| `(tactic| myhammer) => do evalHammerWithArgs $ ← `(tactic| myhammer [] {})
+| `(tactic| myhammer [$userInputTerms,*]) => do evalHammerWithArgs $ ← `(tactic| myhammer [$userInputTerms,*] {})
+| `(tactic| myhammer {$configOptions,*}) => do evalHammerWithArgs $ ← `(tactic| myhammer [] {$configOptions,*})
+| `(tactic| myhammer [$userInputTerms,*] {$configOptions,*}) => do evalHammerWithArgs $ ← `(tactic| myhammer [$userInputTerms,*] {$configOptions,*})
 | _ => throwUnsupportedSyntax
 
 end MyHammer

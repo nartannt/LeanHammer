@@ -1,19 +1,27 @@
 import Lean.Expr
+import Mathlib
 
 
 open Lean Meta Parser Elab Tactic Syntax
 
-def inductive_definitions : CoreM (List Expr) := do
-    let env ← MonadEnv.getEnv
-    let constants := Environment.constants env
-    let cnstToIndDefs (defsAcc: List Expr) _ (nextCnstInfo: ConstantInfo): (List Expr) :=
-        match nextCnstInfo with
-          | ConstantInfo.inductInfo inductVal =>
-            let ctors := inductVal.ctors
-            let ctorsTypes := (List.filterMap (fun ctor ↦
-                match Environment.find? env ctor with
-                  | some val => some (ConstantInfo.toConstantVal val).type
-                  | none => none) ctors )
-            (ctorsTypes ++ defsAcc)
-          | _ => defsAcc
-    return SMap.fold cnstToIndDefs [] constants
+-- TODO we want to apply this tactic after the premise selection to avoid generating useless lemmas
+-- but we also want to do it before so that the premise selector can chose them
+-- given how long the tactic takes to execute we may want to only apply it to selected definitions
+open Mathlib.Tactic.MkIff Lean Meta Elab
+elab "list_iff_ind" : tactic => do
+  let env ← Lean.MonadEnv.getEnv -- get the local environment
+  let constants := env.constants -- get the local constants.
+  for cnst in constants do
+    let (cnstName, cnstInfo) := cnst
+      match cnstInfo with
+        | .inductInfo inductVal =>
+          if !cnstName.toString.contains "Lean." &&
+             !cnstName.toString.contains "Std." then
+            --dbg_trace "{cnstName}"
+            let indValTerm : Term ← PrettyPrinter.delab inductVal.type
+            let indValSyntax : Syntax := indValTerm.raw
+            try MetaM.run' do 
+              mkIffOfInductivePropImpl cnstName (cnstName.decapitalize.toString ++ "____iff").toName indValSyntax
+            catch _ => pure ()
+          else pure ()
+        | _ => pure ()

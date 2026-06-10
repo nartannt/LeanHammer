@@ -8,10 +8,10 @@ name = "«premise-selection»"
 git = "https://github.com/hanwenzhu/premise-selection"
 rev = "v4.30.0"
 
-[[require]]
-name = "Qq"
-git = "https://github.com/leanprover-community/quote4.git"
-rev = "v4.30.0"
+#[[require]]
+#name = "Qq"
+#git = "https://github.com/leanprover-community/quote4.git"
+#rev = "v4.30.0"
 
 [[require]]
 name = "«aesop»"
@@ -21,6 +21,11 @@ rev = "v4.30.0"
 [[require]]
 name = "«Duper»"
 git = "https://github.com/leanprover-community/duper.git"
+rev = "v4.30.0"
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
 rev = "v4.30.0"
 
 [[lean_lib]]
