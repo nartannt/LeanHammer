@@ -4,7 +4,7 @@ preferReleaseBuild = true
 defaultTargets = ["MyHammer"]
 
 [[require]]
-name = "«premise-selection»"
+name = "premise-selection"
 git = "https://github.com/hanwenzhu/premise-selection"
 rev = "v4.30.0"
 
@@ -13,15 +13,19 @@ rev = "v4.30.0"
 #git = "https://github.com/leanprover-community/quote4.git"
 #rev = "v4.30.0"
 
-[[require]]
-name = "«aesop»"
-git = "https://github.com/leanprover-community/aesop"
-rev = "v4.30.0"
+#[[require]]
+#name = "«aesop»"
+#git = "https://github.com/leanprover-community/aesop"
+#rev = "v4.30.0"
 
 [[require]]
-name = "«Duper»"
+name = "Duper"
 git = "https://github.com/leanprover-community/duper.git"
 rev = "v4.30.0"
+preferReleaseBuild = true
+platformIndependent = true
+releaseRepo  = "https://github.com/leanprover-community/duper.git"
+buildArchive = "Duper-x86_64-unknown-linux-gnu.tar.gz"
 
 [[require]]
 name = "mathlib"

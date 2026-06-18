@@ -2,6 +2,7 @@ import MyHammer.HammerCore
 import PremiseSelection
 import Aesop
 import Qq
+import MyHammer.NewThings
 
 open Lean Meta Elab Tactic HammerCore Syntax LibrarySuggestions Duper Aesop Qq
 
@@ -95,6 +96,9 @@ def evalHammerWithArgs : Tactic
   trace[hammer.premises] "premises from premise selector: {premises}"
   let premises := premises.filter (fun p => !userInputTerms.contains p) -- Remove duplicates between `userInputTerms` and `premises`
   trace[hammer.premises] "premises from premise selector after removing duplicates in user input terms: {premises}"
+  let premises ← addIndDefMkIff premises
+  trace[hammer.premises] "premises from premise selector after removing duplicates in user input terms \
+  and adding iff theorems for inductive definitions: {premises}"
   runHammer stxRef ∅ userInputTerms premises true configOptions
 | _ => throwUnsupportedSyntax
 
