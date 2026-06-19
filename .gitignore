@@ -5,3 +5,4 @@
 /lakefile.olean
 .DS_Store
 *.exe
+/result
