@@ -8,10 +8,11 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
+        my-lean =  pkgs.callPackage /home/nartan/Documents/phd/patched_lean/default.nix { };
       in rec {
          devShells.default = pkgs.mkShell {
           name = "hammer_time-dev";
-          packages = with pkgs; [ lean4 elan ];
+          packages = with pkgs; [ my-lean elan ];
        };
 
     });

@@ -3,6 +3,7 @@ import PremiseSelection
 import Aesop
 import Qq
 import MyHammer.NewThings
+import Mathlib
 
 open Lean Meta Elab Tactic HammerCore Syntax LibrarySuggestions Duper Aesop Qq
 
@@ -44,21 +45,6 @@ def runHammer (stxRef : Syntax) (simpLemmas : Syntax.TSepArray [`Lean.Parser.Tac
       let ruleTacStx ← `(Aesop.rule_expr| ($(mkIdent `instantiatedHammerCoreRuleTac)))
       Aesop.evalAesop (← `(tactic| aesop? $addIdentStxs* (add unsafe $(Syntax.mkNatLit aesopAutoPriority):num% tactic $ruleTacStx)))
 
-def inductive_definitions : CoreM (List Expr) := do
-    let env ← MonadEnv.getEnv
-    let constants := Environment.constants env
-    let cnstToIndDefs (defsAcc: List Expr) _ (nextCnstInfo: ConstantInfo): (List Expr) :=
-        match nextCnstInfo with
-          | ConstantInfo.inductInfo inductVal =>
-            let ctors := inductVal.ctors
-            let ctorsTypes := (List.filterMap (fun ctor ↦
-                match Environment.find? env ctor with
-                  | some val => some (ConstantInfo.toConstantVal val).type
-                  | none => none) ctors )
-            (ctorsTypes ++ defsAcc)
-          | _ => defsAcc
-    return SMap.fold cnstToIndDefs [] constants
-
 def evalHammerWithArgs : Tactic
 | `(tactic| myhammer%$stxRef [$userInputTerms,*] {$configOptions,*}) => withoutModifyingEnv do
   withMainContext do
@@ -96,7 +82,18 @@ def evalHammerWithArgs : Tactic
   trace[hammer.premises] "premises from premise selector: {premises}"
   let premises := premises.filter (fun p => !userInputTerms.contains p) -- Remove duplicates between `userInputTerms` and `premises`
   trace[hammer.premises] "premises from premise selector after removing duplicates in user input terms: {premises}"
-  let premises ← addIndDefMkIff premises
+  let iffThmNames: (Array Name) ← (
+    let addMkIffOpt (term : Term) := (do
+      let termSyntax := term.raw
+      let termName : Name := Lean.Syntax.getId term
+      let thmName := (termName.decapitalize.toString ++ "___iff").toName
+      let res : Option Term ← try do
+        (Mathlib.Tactic.MkIff.mkIffOfInductivePropImpl termName thmName termSyntax)
+        return (some thmName)
+      catch _ => return none)
+    Array.filterMapM addMkIffOpt premises)
+  let indPremises ← iffThmNames.mapM (fun name => return (← `(term| $(mkIdent name).instantiateMVars)))
+  let premises := Array.append premises indPremises
   trace[hammer.premises] "premises from premise selector after removing duplicates in user input terms \
   and adding iff theorems for inductive definitions: {premises}"
   runHammer stxRef ∅ userInputTerms premises true configOptions

@@ -1,5 +1,5 @@
 name = "MyHammer"
-precompileModules = true
+#precompileModules = true
 preferReleaseBuild = true
 defaultTargets = ["MyHammer"]
 
@@ -21,11 +21,11 @@ rev = "v4.30.0"
 [[require]]
 name = "Duper"
 git = "https://github.com/leanprover-community/duper.git"
-rev = "v4.30.0"
-preferReleaseBuild = true
-platformIndependent = true
-releaseRepo  = "https://github.com/leanprover-community/duper.git"
-buildArchive = "Duper-x86_64-unknown-linux-gnu.tar.gz"
+rev = "main"
+#preferReleaseBuild = true
+#platformIndependent = true
+#releaseRepo  = "https://github.com/leanprover-community/duper.git"
+#buildArchive = "Duper-x86_64-unknown-linux-gnu.tar.gz"
 
 [[require]]
 name = "mathlib"
