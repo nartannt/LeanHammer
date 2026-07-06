@@ -82,21 +82,13 @@ def evalHammerWithArgs : Tactic
   trace[hammer.premises] "premises from premise selector: {premises}"
   let premises := premises.filter (fun p => !userInputTerms.contains p) -- Remove duplicates between `userInputTerms` and `premises`
   trace[hammer.premises] "premises from premise selector after removing duplicates in user input terms: {premises}"
-  let iffThmNames: (Array Name) ← (
-    let addMkIffOpt (term : Term) := (do
-      let termSyntax := term.raw
-      let termName : Name := Lean.Syntax.getId term
-      let thmName := (termName.decapitalize.toString ++ "___iff").toName
-      let res : Option Term ← try do
-        (Mathlib.Tactic.MkIff.mkIffOfInductivePropImpl termName thmName termSyntax)
-        return (some thmName)
-      catch _ => return none)
-    Array.filterMapM addMkIffOpt premises)
-  let indPremises ← iffThmNames.mapM (fun name => return (← `(term| $(mkIdent name).instantiateMVars)))
-  let premises := Array.append premises indPremises
+  --let iffThmNames: (Array Name) ← addIndDefMkIff premises
+  --let indPremises ← iffThmNames.mapM (fun name => return (← `(term| $(mkIdent name))))
+  let iffTerms ← indDefIffTerms premises
+  --let premises := Array.append premises indPremises
   trace[hammer.premises] "premises from premise selector after removing duplicates in user input terms \
   and adding iff theorems for inductive definitions: {premises}"
-  runHammer stxRef ∅ userInputTerms premises true configOptions
+  runHammer stxRef ∅ (userInputTerms ++ iffTerms) premises true configOptions
 | _ => throwUnsupportedSyntax
 
 -- Note, we no longer use `macro_rules` to process the cases where `hammer` is not given all of its arguments because `macro_rules` appears to
