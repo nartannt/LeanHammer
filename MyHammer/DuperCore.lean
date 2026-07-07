@@ -4,7 +4,7 @@ open Lean Meta Auto Elab Tactic Parser Tactic Duper
 
 initialize Lean.registerTraceClass `myhammer.debug
 
-namespace HammerCore
+namespace MyHammerCore
 
 /-- Returns true if `e` contains a name `n` where `p n` is true. Copied from `Mathlib.Lean.Expr.Basic.lean` -/
 def containsConst (e : Expr) (p : Name → Bool) : Bool :=
@@ -63,4 +63,4 @@ def getDuperCoreLemmas (unsatCoreDerivLeafStrings : Array String) (userFacts : S
                   m!"Duper threw the following error:\n\n{e.toMessageData}"
   pure (coreUserFacts, prf)
 
-end HammerCore
+end MyHammerCore

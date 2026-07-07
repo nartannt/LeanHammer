@@ -59,7 +59,7 @@ register_option hammer.aesopAutoPriorityDefault : Nat := {
   descr := "The default priority of calls to auto within aesop"
 }
 
-namespace HammerCore
+namespace MyHammerCore
 
 def getHammerSolverDefault (opts : Options) : String := hammer.solverDefault.get opts
 def getHammerSolverTimeoutDefault (opts : Options) : Nat := hammer.solverTimeoutDefault.get opts
@@ -346,4 +346,4 @@ def withDuperOptions [Monad m] [MonadError m] [MonadWithOptions m] (x : m α) : 
       o.set `auto.mono.ignoreNonQuasiHigherOrder true
     ) x
 
-end HammerCore
+end MyHammerCore

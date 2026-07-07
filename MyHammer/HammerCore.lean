@@ -5,12 +5,12 @@ import Aesop
 
 open Lean Meta Parser Elab Tactic Auto Duper Syntax
 
-namespace HammerCore
+namespace MyHammerCore
 
 /-- Given a Syntax.TSepArray of facts provided by the user (which may include `*` to indicate that hammer should read in the
     full local context) `removeHammerStar` returns the Syntax.TSepArray with `*` removed and a boolean that indicates whether `*`
     was included in the original input. -/
-def removeHammerStar (facts : Syntax.TSepArray [`HammerCore.hammerStar, `term] ",") : Bool × Syntax.TSepArray `term "," := Id.run do
+def removeHammerStar (facts : Syntax.TSepArray [`MyHammerCore.hammerStar, `term] ",") : Bool × Syntax.TSepArray `term "," := Id.run do
   let factsArr := facts.elemsAndSeps -- factsArr contains both the elements of facts and separators, ordered like `#[e1, s1, e2, s2, e3]`
   let mut newFactsArr : Array Syntax := #[]
   let mut removedHammerStar := true
@@ -212,4 +212,4 @@ def evalHammerCore : Tactic
   runHammerCore stxRef simpLemmas facts includeLCtx configOptions
 | _ => throwUnsupportedSyntax
 
-end HammerCore
+end MyHammerCore

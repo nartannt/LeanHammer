@@ -5,7 +5,7 @@ import Qq
 import MyHammer.MkIffLemmas
 import Mathlib
 
-open Lean Meta Elab Tactic HammerCore Syntax LibrarySuggestions Duper Aesop Qq
+open Lean Meta Elab Tactic MyHammerCore Syntax LibrarySuggestions Duper Aesop Qq
 
 initialize Lean.registerTraceClass `hammer.premises
 
@@ -16,7 +16,7 @@ syntax (name := myhammer) "myhammer" (ppSpace "[" (term),* "]")? (ppSpace "{"MyH
 set_library_suggestions open Lean.LibrarySuggestions in Cloud.premiseSelector <|> sineQuaNonSelector.intersperse currentFile
 
 def runHammer (stxRef : Syntax) (simpLemmas : Syntax.TSepArray [`Lean.Parser.Tactic.simpErase, `Lean.Parser.Tactic.simpLemma] ",")
-  (userInputTerms premises : Array Term) (includeLCtx : Bool) (configOptions : HammerCore.ConfigurationOptions) : TacticM Unit := withMainContext do
+  (userInputTerms premises : Array Term) (includeLCtx : Bool) (configOptions : MyHammerCore.ConfigurationOptions) : TacticM Unit := withMainContext do
   let aesopAutoPriority := configOptions.aesopAutoPriority
   let aesopPremisePriority := configOptions.aesopPremisePriority
   let autoPremises := userInputTerms ++ premises.take configOptions.autoPremises

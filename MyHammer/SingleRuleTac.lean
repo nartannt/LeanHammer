@@ -3,7 +3,7 @@ import Aesop
 
 open Lean Meta Parser Elab Tactic Auto Duper Syntax Aesop
 
-namespace HammerCore
+namespace MyHammerCore
 
 /-- Constructs a `SingleRuleTac` that uses Lean-auto/Zipperposition to attempt to solve the input goal with `formulas` (and all facts in the local context
     if `includeLCtx` is enabled), and either throws an error (if Lean-auto/Zipperposition fail) or suggests a Duper invocation using the subset of `formulas`
@@ -110,4 +110,4 @@ def hammerCoreSingleRuleTac (formulas : List (Expr × Expr × Array Name × Bool
           let postGoals ← postGoals.mapM (mvarIdToSubgoal input.goal ·)
           return (postGoals, some #[step], some ⟨1.0⟩)
 
-end HammerCore
+end MyHammerCore
