@@ -3,7 +3,7 @@ import MyHammer.DuperCore
 import MyHammer.HammerCore
 import MyHammer.Options
 import MyHammer.SingleRuleTac
-import MyHammer.NewThings
+import MyHammer.MkIffLemmas
 
 set_option trace.auto.tptp.printQuery true
 set_option trace.auto.tptp.result true

@@ -2,7 +2,7 @@ import MyHammer.HammerCore
 import PremiseSelection
 import Aesop
 import Qq
-import MyHammer.NewThings
+import MyHammer.MkIffLemmas
 import Mathlib
 
 open Lean Meta Elab Tactic HammerCore Syntax LibrarySuggestions Duper Aesop Qq
@@ -82,10 +82,7 @@ def evalHammerWithArgs : Tactic
   trace[hammer.premises] "premises from premise selector: {premises}"
   let premises := premises.filter (fun p => !userInputTerms.contains p) -- Remove duplicates between `userInputTerms` and `premises`
   trace[hammer.premises] "premises from premise selector after removing duplicates in user input terms: {premises}"
-  --let iffThmNames: (Array Name) ← addIndDefMkIff premises
-  --let indPremises ← iffThmNames.mapM (fun name => return (← `(term| $(mkIdent name))))
   let iffTerms ← indDefIffTerms premises
-  --let premises := Array.append premises indPremises
   trace[hammer.premises] "iff theorems added: {iffTerms}"
   runHammer stxRef ∅ (userInputTerms ++ iffTerms) premises true configOptions
 | _ => throwUnsupportedSyntax
