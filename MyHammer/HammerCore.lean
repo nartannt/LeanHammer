@@ -33,8 +33,8 @@ def duperNativeSolverFunc (lemmas : Array Lemma) (_inhLemmas : Array Lemma) : Me
   let (formulas, extraFormulas) ← autoLemmasToFormulas lemmas
   let formulas := formulas.map (fun f => (f.1, f.2.1, f.2.2.1, f.2.2.2, none))
   let extraFormulas := extraFormulas.map (fun f => (f.1, f.2.1, f.2.2.1, f.2.2.2, none))
-  trace[hammer.debug] "Formulas passed to Duper after filtering: {formulas.map (fun x => x.1)}"
-  trace[hammer.debug] "Extra formulas passed to Duper after filtering: {extraFormulas.map (fun x => x.1)}"
+  trace[myhammer.debug] "Formulas passed to Duper after filtering: {formulas.map (fun x => x.1)}"
+  trace[myhammer.debug] "Extra formulas passed to Duper after filtering: {extraFormulas.map (fun x => x.1)}"
   Duper.runDuperPortfolioMode formulas extraFormulas .none
     { portfolioMode := true,
       portfolioInstance := none,
@@ -164,8 +164,8 @@ def runHammerCore (stxRef : Syntax) (simpLemmas : Syntax.TSepArray [`Lean.Parser
           throwTranslationError
       let solverHints ←
         tryCatchRuntimeEx (do
-          trace[hammer.debug] "Lemmas passed to runAutoGetHints {lemmas}"
-          trace[hammer.debug] "inhFacts passed to runAutoGetHints {inhFacts}"
+          trace[myhammer.debug] "Lemmas passed to runAutoGetHints {lemmas}"
+          trace[myhammer.debug] "inhFacts passed to runAutoGetHints {inhFacts}"
           runAutoGetHints lemmas inhFacts
           )
           (fun e => do
@@ -178,7 +178,7 @@ def runHammerCore (stxRef : Syntax) (simpLemmas : Syntax.TSepArray [`Lean.Parser
       | Solver.zipperposition_exe | Solver.zipperposition =>
         let mut tacticsArr := preprocessingSuggestion -- The array of tactics that will be suggested to the user
         let unsatCoreDerivLeafStrings := solverHints.1
-        trace[hammer.debug] "unsatCoreDerivLeafStrings: {unsatCoreDerivLeafStrings}"
+        trace[myhammer.debug] "unsatCoreDerivLeafStrings: {unsatCoreDerivLeafStrings}"
         let duperConfigOptions :=
           { portfolioMode := true, portfolioInstance := none, inhabitationReasoning := none, includeExpensiveRules := none,
             preprocessing := some PreprocessingOption.FullPreprocessing, selFunction := none }

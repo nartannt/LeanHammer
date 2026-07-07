@@ -2,7 +2,7 @@ import Duper
 
 open Lean Meta Auto Elab Tactic Parser Tactic Duper
 
-initialize Lean.registerTraceClass `hammer.debug
+initialize Lean.registerTraceClass `myhammer.debug
 
 namespace HammerCore
 
@@ -50,13 +50,13 @@ def getDuperCoreLemmas (unsatCoreDerivLeafStrings : Array String) (userFacts : S
     if unsatCoreIncludesFact unsatCoreDerivLeafStrings factStx then
       coreUserFacts := coreUserFacts.push factStx
   -- Build `formulas` to pass into `runDuperPortfolioMode`
-  trace[hammer.debug] "{decl_name%} :: Collecting assumptions. coreUserFacts: {coreUserFacts}"
+  trace[myhammer.debug] "{decl_name%} :: Collecting assumptions. coreUserFacts: {coreUserFacts}"
   let mut formulas := (← collectAssumptions coreUserFacts includeAllLctx goalDecls).toArray
   -- Try to reconstruct the proof using `runDuperPortfolioMode`
   let prf ←
     try
       Core.checkSystem s!"{decl_name%} :: runDuperPortfolioMode"
-      trace[hammer.debug] "{decl_name%} :: Calling runDuperPortfolioMode with formulas: {formulas}"
+      trace[myhammer.debug] "{decl_name%} :: Calling runDuperPortfolioMode with formulas: {formulas}"
       runDuperPortfolioMode formulas.toList [] none duperConfigOptions none
     catch e =>
       throwError m!"{decl_name%} :: Unable to use hints from external solver to reconstruct proof. " ++

@@ -68,8 +68,8 @@ def hammerCoreSingleRuleTac (formulas : List (Expr × Expr × Array Name × Bool
             throwTranslationError
         let solverHints ←
           tryCatchRuntimeEx (do
-            trace[hammer.debug] "Lemmas passed to runAutoGetHints {lemmas}"
-            trace[hammer.debug] "inhFacts passed to runAutoGetHints {inhFacts}"
+            trace[myhammer.debug] "Lemmas passed to runAutoGetHints {lemmas}"
+            trace[myhammer.debug] "inhFacts passed to runAutoGetHints {inhFacts}"
             runAutoGetHints lemmas inhFacts
             )
             (fun e => do
@@ -82,7 +82,7 @@ def hammerCoreSingleRuleTac (formulas : List (Expr × Expr × Array Name × Bool
         | Solver.cvc5 => throwError "evalHammer :: cvc5 support not yet implemented"
         | Solver.zipperposition_exe | Solver.zipperposition =>
           let unsatCoreDerivLeafStrings := solverHints.1
-          trace[hammer.debug] "unsatCoreDerivLeafStrings: {unsatCoreDerivLeafStrings}"
+          trace[myhammer.debug] "unsatCoreDerivLeafStrings: {unsatCoreDerivLeafStrings}"
           -- Collect all formulas that appear in the unsat core and have a `stxOpt`
           -- **TODO** Add a setting that allows Duper to use Zipperposition's unsat core for lctx facts as well (not just user provided facts)
           let coreFormulas := formulas.filterMap
