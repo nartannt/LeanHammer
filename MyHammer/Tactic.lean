@@ -7,7 +7,7 @@ import Mathlib
 
 open Lean Meta Elab Tactic MyHammerCore Syntax LibrarySuggestions Duper Aesop Qq
 
-initialize Lean.registerTraceClass `hammer.premises
+initialize Lean.registerTraceClass `myhammer.premises
 
 namespace MyHammer
 
@@ -78,12 +78,12 @@ def evalHammerWithArgs : Tactic
     else selector goal librarySuggestionsConfig
   let premises ← premises.mapM (fun p => unresolveNameGlobal p.name)
   let premises ← premises.mapM (fun p => return (← `(term| $(mkIdent p))))
-  trace[hammer.premises] "user input terms: {userInputTerms}"
-  trace[hammer.premises] "premises from premise selector: {premises}"
+  trace[myhammer.premises] "user input terms: {userInputTerms}"
+  trace[myhammer.premises] "premises from premise selector: {premises}"
   let premises := premises.filter (fun p => !userInputTerms.contains p) -- Remove duplicates between `userInputTerms` and `premises`
-  trace[hammer.premises] "premises from premise selector after removing duplicates in user input terms: {premises}"
+  trace[myhammer.premises] "premises from premise selector after removing duplicates in user input terms: {premises}"
   let iffTerms ← indDefIffTerms premises
-  trace[hammer.premises] "iff theorems added: {iffTerms}"
+  trace[myhammer.premises] "iff theorems added: {iffTerms}"
   runHammer stxRef ∅ (userInputTerms ++ iffTerms) premises true configOptions
 | _ => throwUnsupportedSyntax
 

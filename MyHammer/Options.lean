@@ -14,62 +14,62 @@ declare_syntax_cat MyHammer.bool_lit (behavior := symbol)
 syntax "true" : MyHammer.bool_lit
 syntax "false" : MyHammer.bool_lit
 
-register_option hammer.solverDefault : String := {
+register_option myhammer.solverDefault : String := {
   defValue := "zipperposition_exe"
   descr := "The default value of the solver option"
 }
 
-register_option hammer.solverTimeoutDefault : Nat := {
+register_option myhammer.solverTimeoutDefault : Nat := {
   defValue := 10
   descr := "The default timeout for the solver (in seconds)"
 }
 
-register_option hammer.preprocessingDefault : String := {
+register_option myhammer.preprocessingDefault : String := {
   defValue := "aesop"
   descr := "The default value of the preprocessing option"
 }
 
-register_option hammer.disableAesopDefault : Bool := {
+register_option myhammer.disableAesopDefault : Bool := {
   defValue := false
   descr := "The default value of the disableAesop option"
 }
 
-register_option hammer.disableAutoDefault : Bool := {
+register_option myhammer.disableAutoDefault : Bool := {
   defValue := false
   descr := "The default value of the disableAuto option"
 }
 
-register_option hammer.autoPremisesDefault : Nat := {
+register_option myhammer.autoPremisesDefault : Nat := {
   defValue := 16
   descr := "The default number of premises sent to auto"
 }
 
-register_option hammer.aesopPremisesDefault : Nat := {
+register_option myhammer.aesopPremisesDefault : Nat := {
   defValue := 32
   descr := "The default number of premises sent to aesop to be used as unsafe rules"
 }
 
-register_option hammer.aesopPremisePriorityDefault : Nat := {
+register_option myhammer.aesopPremisePriorityDefault : Nat := {
   defValue := 20
   descr := "The default priority of premises sent to aesop"
 }
 
-register_option hammer.aesopAutoPriorityDefault : Nat := {
+register_option myhammer.aesopAutoPriorityDefault : Nat := {
   defValue := 10
   descr := "The default priority of calls to auto within aesop"
 }
 
 namespace MyHammerCore
 
-def getHammerSolverDefault (opts : Options) : String := hammer.solverDefault.get opts
-def getHammerSolverTimeoutDefault (opts : Options) : Nat := hammer.solverTimeoutDefault.get opts
-def getPreprocessingDefault (opts : Options) : String := hammer.preprocessingDefault.get opts
-def getDisableAesopDefault (opts : Options) : Bool := hammer.disableAesopDefault.get opts
-def getDisableAutoDefault (opts : Options) : Bool := hammer.disableAutoDefault.get opts
-def getAutoPremisesDefault (opts : Options) : Nat := hammer.autoPremisesDefault.get opts
-def getAesopPremisesDefault (opts : Options) : Nat := hammer.aesopPremisesDefault.get opts
-def getAesopPremisePriorityDefault (opts : Options) : Nat := hammer.aesopPremisePriorityDefault.get opts
-def getAesopAutoPriorityDefault (opts : Options) : Nat := hammer.aesopAutoPriorityDefault.get opts
+def getHammerSolverDefault (opts : Options) : String := myhammer.solverDefault.get opts
+def getHammerSolverTimeoutDefault (opts : Options) : Nat := myhammer.solverTimeoutDefault.get opts
+def getPreprocessingDefault (opts : Options) : String := myhammer.preprocessingDefault.get opts
+def getDisableAesopDefault (opts : Options) : Bool := myhammer.disableAesopDefault.get opts
+def getDisableAutoDefault (opts : Options) : Bool := myhammer.disableAutoDefault.get opts
+def getAutoPremisesDefault (opts : Options) : Nat := myhammer.autoPremisesDefault.get opts
+def getAesopPremisesDefault (opts : Options) : Nat := myhammer.aesopPremisesDefault.get opts
+def getAesopPremisePriorityDefault (opts : Options) : Nat := myhammer.aesopPremisePriorityDefault.get opts
+def getAesopAutoPriorityDefault (opts : Options) : Nat := myhammer.aesopAutoPriorityDefault.get opts
 
 def getHammerSolverDefaultM : CoreM String := do
   let opts ← getOptions
