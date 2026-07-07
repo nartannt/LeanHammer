@@ -1,6 +1,7 @@
 import Lean
 import Auto
 
+namespace MyHammerCore
 open Lean Parser Elab Tactic
 
 -- An option to specify the external prover that `hammer` uses
@@ -59,7 +60,6 @@ register_option myhammer.aesopAutoPriorityDefault : Nat := {
   descr := "The default priority of calls to auto within aesop"
 }
 
-namespace MyHammerCore
 
 def getHammerSolverDefault (opts : Options) : String := myhammer.solverDefault.get opts
 def getHammerSolverTimeoutDefault (opts : Options) : Nat := myhammer.solverTimeoutDefault.get opts
