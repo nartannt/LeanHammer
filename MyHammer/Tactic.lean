@@ -86,8 +86,7 @@ def evalHammerWithArgs : Tactic
   --let indPremises ← iffThmNames.mapM (fun name => return (← `(term| $(mkIdent name))))
   let iffTerms ← indDefIffTerms premises
   --let premises := Array.append premises indPremises
-  trace[hammer.premises] "premises from premise selector after removing duplicates in user input terms \
-  and adding iff theorems for inductive definitions: {premises}"
+  trace[hammer.premises] "iff theorems added: {iffTerms}"
   runHammer stxRef ∅ (userInputTerms ++ iffTerms) premises true configOptions
 | _ => throwUnsupportedSyntax
 
