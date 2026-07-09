@@ -49,6 +49,8 @@ def indDefIffTerms (currPremises : Array Term) : MetaM (Array (TSyntax `term))  
     let res : Option Term ← do 
       if ← isInductivePredicate termName then
         return some (← `(term| mk_iff $(mkIdent termName)))
-      else return none
+      else 
+        trace[myhammer.premises] "premise rejected for iff-thm : {termName}"
+        return none
   let resTerms : (Array Term) ← Array.filterMapM addMkIffOpt currPremises
   return (resTerms)
