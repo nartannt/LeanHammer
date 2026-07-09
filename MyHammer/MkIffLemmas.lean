@@ -45,7 +45,7 @@ def mkIffInd : Elab.Term.TermElab := fun stx _expectedType? => do
 
 def indDefIffTerms (currPremises : Array Term) : MetaM (Array (TSyntax `term))  := do
   let addMkIffOpt (term : Term) := do
-    let termName : Name := Lean.Syntax.getId term
+    let termName : Name ← resolveGlobalConstNoOverload term
     let res : Option Term ← do 
       if ← isInductivePredicate termName then
         return some (← `(term| mk_iff $(mkIdent termName)))
